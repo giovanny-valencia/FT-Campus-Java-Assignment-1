@@ -9,6 +9,8 @@
 - User registration includes simple "Client" or "Visitor" role self assignment.
 - All Visitors still have their own usernames to assign tasks specifically to.
 Specifically, there isn't a global "visitor" name.
+- Menu looks a bit bloated but a lot of it is Menu related, such as menu conditionals, 
+and menu print statements.
 ---------------------------
 
 ## Problem Statement

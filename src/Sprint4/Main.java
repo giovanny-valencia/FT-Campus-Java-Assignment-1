@@ -69,82 +69,74 @@ public class Main {
                     taskDAO.printTasks(currentUser);
                 }
 
-                Menu.displayMenuOptions();
+                if (currentUser.hasClientRole(currentUser)){
+                    Menu.displayMenuOptions();
+                } else {
+                    Menu.displayLimitedOptions();
+                }
+
                 int userInput = scanner.nextInt();
                 scanner.nextLine(); // consume the leftover new line
 
-                switch (userInput){
-                    case Menu.EXIT -> isRunning = false;
+                // full menu option only for Clients
+                if (currentUser.hasClientRole(currentUser)) {
+                    switch (userInput) {
+                        case Menu.EXIT -> isRunning = false;
 
-                    case Menu.ADD_TASK -> {
-                        if(!currentUser.hasClientRole(currentUser)){
-                            System.out.println("Visitors cannot add tasks");
-                            break;
+                        case Menu.ADD_TASK -> {
+                            System.out.print("Enter title for the task: ");
+                            String title = scanner.nextLine();
+                            System.out.print("Enter description for the task: ");
+                            String description = scanner.nextLine();
+                            System.out.print("Enter assignee's name for this task: ");
+                            String assignee = scanner.nextLine();
+
+                            taskDAO.addTask(title, description, assignee);
                         }
 
-                        System.out.print("Enter title for the task: ");
-                        String title = scanner.nextLine();
-                        System.out.print("Enter description for the task: ");
-                        String description = scanner.nextLine();
-                        System.out.print("Enter assignee's name for this task: ");
-                        String assignee = scanner.nextLine();
+                        case Menu.UPDATE_TASK -> {
+                            System.out.println("Please state the task ID of the task you wish to update");
+                            taskDAO.printTasks(currentUser);
 
-                        taskDAO.addTask(title, description, assignee);
-                    }
+                            System.out.print("ID: ");
+                            int taskToChange = scanner.nextInt();
+                            scanner.nextLine(); // consume empty line
 
-                    case Menu.UPDATE_TASK -> {
-                        if(!currentUser.hasClientRole(currentUser)){
-                            System.out.println("Visitors cannot update tasks");
-                            break;
+                            System.out.print("Enter new title for the task (No change? Click Enter): ");
+                            String title = scanner.nextLine();
+
+                            System.out.print("Enter description for the task (No change? Click Enter): ");
+                            String description = scanner.nextLine();
+
+                            System.out.print("Enter assignee's name for this task (No change? Click Enter): ");
+                            String assignee = scanner.nextLine();
+
+                            taskDAO.updateTask(taskToChange, title, description, assignee);
                         }
 
-                        System.out.println("Please state the task ID of the task you wish to update");
-                        taskDAO.printTasks(currentUser);
+                        case Menu.DELETE_TASK -> {
+                            System.out.println("Please state the task number you wish to delete");
+                            taskDAO.printTasks(currentUser);
 
-                        System.out.print("ID: ");
-                        int taskToChange = scanner.nextInt();
-                        scanner.nextLine(); // consume empty line
-
-                        System.out.print("Enter new title for the task (No change? Click Enter): ");
-                        String title = scanner.nextLine();
-
-                        System.out.print("Enter description for the task (No change? Click Enter): ");
-                        String description = scanner.nextLine();
-
-                        System.out.print("Enter assignee's name for this task (No change? Click Enter): ");
-                        String assignee = scanner.nextLine();
-
-                        taskDAO.updateTask(taskToChange, title, description, assignee);
-                    }
-
-                    case Menu.DELETE_TASK -> {
-                        if(!currentUser.hasClientRole(currentUser)){
-                            System.out.println("Visitors cannot delete tasks");
-                            break;
+                            System.out.print("ID: ");
+                            int taskToDelete = scanner.nextInt();
+                            scanner.nextLine(); // consume empty line
+                            taskDAO.deleteTask(taskToDelete, currentUser);
                         }
 
-                        System.out.println("Please state the task number you wish to delete");
-                        taskDAO.printTasks(currentUser);
-
-                        System.out.print("ID: ");
-                        int taskToDelete = scanner.nextInt();
-                        scanner.nextLine(); // consume empty line
-                        taskDAO.deleteTask(taskToDelete, currentUser);
-                    }
-
-                    case Menu.SEARCH_TASK -> {
-                        if(!currentUser.hasClientRole(currentUser)){
-                            System.out.println("Visitors cannot search tasks");
-                            break;
+                        case Menu.SEARCH_TASK -> {
+                            System.out.println("Please state the task description you wish to Search");
+                            String description = scanner.nextLine();
+                            taskDAO.searchForTask(description);
                         }
 
-                        System.out.println("Please state the task description you wish to Search");
-                        String description = scanner.nextLine();
-                        taskDAO.searchForTask(description);
+                        case Menu.LOGOUT -> currentUser = null;
                     }
-
-                    case Menu.LOGOUT -> {
-                        currentUser = null;
+                } else { // limited selection for Visitors
+                    switch (userInput){
+                        case Menu.EXIT -> isRunning = false;
+                        case Menu.LOGOUT -> currentUser = null;
+                        default -> System.out.println("Invalid Entry");
                     }
                 }
             }

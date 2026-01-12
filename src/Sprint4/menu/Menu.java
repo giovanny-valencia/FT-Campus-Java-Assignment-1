@@ -19,4 +19,10 @@ public class Menu {
         System.out.println("4 -- Search For A Specific Task");
         System.out.println("5 -- Log Out");
     }
+
+    public static void displayLimitedOptions(){
+        System.out.println("== Menu Options ==");
+        System.out.println("0 -- Exit");
+        System.out.println("5 -- Log Out");
+    }
 }
