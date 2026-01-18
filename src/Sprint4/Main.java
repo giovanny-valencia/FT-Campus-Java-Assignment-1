@@ -1,13 +1,11 @@
 package Sprint4;
 
-import java.util.Scanner;
-
 import Sprint4.auth.User;
-import Sprint4.auth.UserDAO;
 import Sprint4.auth.UserDAOImpl;
-import Sprint4.auth.Visitor;
-import Sprint4.menu.*;
+import Sprint4.menu.Menu;
 import Sprint4.task.TaskDAOImpl;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,8 +15,8 @@ public class Main {
         TaskDAOImpl taskDAO = new TaskDAOImpl();
         User currentUser = null; // hold session of current authorized user
 
-        while(isRunning){
-            if (currentUser == null){
+        while (isRunning) {
+            if (currentUser == null) {
                 System.out.println("0 -- Exit");
                 System.out.println("1 -- Login");
                 System.out.println("2 -- Register");
@@ -26,7 +24,7 @@ public class Main {
                 int userSelection = scanner.nextInt();
                 scanner.nextLine(); // consume new line
 
-                switch (userSelection){
+                switch (userSelection) {
                     case Menu.EXIT -> isRunning = false;
 
                     case Menu.LOGIN -> {
@@ -39,7 +37,7 @@ public class Main {
                         // null or authorized client / visitor
                         currentUser = userDAO.login(username, password);
 
-                        if (currentUser == null){
+                        if (currentUser == null) {
                             System.out.println("Incorrect Credentials");
                         }
                     }
@@ -54,7 +52,7 @@ public class Main {
                         scanner.nextLine();
 
                         boolean isRegistered = userDAO.register(username, password, accountTypeSelection);
-                        if (!isRegistered){
+                        if (!isRegistered) {
                             System.out.println("Registration failed (Invalid entry or user exists)");
                         } else {
                             System.out.println("Registration successful!");
@@ -65,11 +63,11 @@ public class Main {
             } else { // user is logged in
                 System.out.println("Hi, " + currentUser.getUsername());
 
-                if (!taskDAO.isEmpty()){
+                if (!taskDAO.isEmpty()) {
                     taskDAO.printTasks(currentUser);
                 }
 
-                if (currentUser.hasClientRole(currentUser)){
+                if (currentUser.hasClientRole(currentUser)) {
                     Menu.displayMenuOptions();
                 } else {
                     Menu.displayLimitedOptions();
@@ -133,7 +131,7 @@ public class Main {
                         case Menu.LOGOUT -> currentUser = null;
                     }
                 } else { // limited selection for Visitors
-                    switch (userInput){
+                    switch (userInput) {
                         case Menu.EXIT -> isRunning = false;
                         case Menu.LOGOUT -> currentUser = null;
                         default -> System.out.println("Invalid Entry");
