@@ -5,6 +5,8 @@
 - Error handling with exceptions were handled locally instead of throwing and crashing the program.
 - Some exception errors silently handle
 - There is some repeated code snippets. Will clean up Main's repeated conditional user handling in future sprint.
+- Seeing completed or incompleted tasks sounded like just display all the tasks regardless of status and no special handling.
+Therefore, all tasks are displayed to the occording user.
 -----------------------
 
 ## Problem Statement
